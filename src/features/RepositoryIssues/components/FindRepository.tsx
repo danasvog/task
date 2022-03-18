@@ -8,8 +8,13 @@ import Button from 'components/Button';
 import { IReduxState } from 'state/types';
 import hideable, { TWithHideableProp } from 'utils/hideable';
 
-import { getRepositoryName, getRepositoryOwner, isLoading } from '../selectors';
 import { setRepositoryName, setRepositoryOwner, fetchIssues } from '../actions';
+import {
+  getRepositoryName,
+  getRepositoryOwner,
+  isLoading,
+  getIssuesUids,
+} from '../selectors';
 
 interface IMapStateToProps {
   repositoryOwner: string;
@@ -50,11 +55,13 @@ const FindRepository: React.FC<TFindRepository> = ({
         placeholder={repositoryOwnerPlaceholder}
         value={repositoryOwner}
         onChangeText={onOwnerInputChange}
+        autoCapitalize="none"
       />
       <Input
         placeholder={repositoryNamePlaceholder}
         value={repositoryName}
         onChangeText={onNameInputChange}
+        autoCapitalize="none"
       />
       <Button
         text={buttonText}
@@ -72,7 +79,7 @@ const mapStateToProps = (state: IReduxState) => ({
   repositoryOwnerPlaceholder: 'Repository owner',
   repositoryNamePlaceholder: 'Repository name',
   buttonText: 'Submit',
-  isVisible: true,
+  isVisible: !getIssuesUids(state)?.length,
 });
 
 const mapDispatchToProps = {
