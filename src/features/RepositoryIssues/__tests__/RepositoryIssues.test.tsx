@@ -8,8 +8,13 @@ import { theme } from 'theme';
 
 import RepositoryIssues from '../components/RepositoryIssues';
 import { API_URL } from 'utils/constants';
+import { AnyAction, EmptyObject, Store } from 'redux';
+import { IReduxState } from 'state/types';
 
-let store: any;
+let store: Store<EmptyObject & IReduxState, AnyAction> & {
+  dispatch: unknown;
+};
+
 describe('Repository issues', () => {
   beforeEach(() => {
     store = createStore();
