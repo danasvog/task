@@ -11,7 +11,8 @@ import {
   SET_REPOSITORY_OWNER,
   SET_CURRENT_PAGE,
   SET_ISSUES,
-  RESET_ISSUES,
+  RESET_ISSUES_STATE,
+  RESET_ISSUES_DATA,
   SET_LOADING,
 } from './actionTypes';
 
@@ -51,8 +52,8 @@ const issuesByUidReducer = handleAction<
 >(SET_ISSUES, addByUid, {});
 
 const issuesReducers = combineReducers<IIssuesReducers>({
-  uids: issuesUidsReducer,
-  byUid: issuesByUidReducer,
+  uids: resetReducer([RESET_ISSUES_DATA], issuesUidsReducer),
+  byUid: resetReducer([RESET_ISSUES_DATA], issuesByUidReducer),
   currentPage: currentPageReducer,
 });
 
@@ -60,5 +61,5 @@ export default combineReducers<IRepositoryIssues>({
   repositoryName: repositoryNameReducer,
   repositoryOwner: repositoryOwnerReducer,
   isLoading: isLoadingReducer,
-  issues: resetReducer([RESET_ISSUES], issuesReducers),
+  issues: resetReducer([RESET_ISSUES_STATE], issuesReducers),
 });

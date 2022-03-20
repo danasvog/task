@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { IReduxState } from 'state/types';
 
-import { handleSortByTitleClick, resetIssues } from '../actions';
+import { handleSortByTitleClick, resetIssuesState } from '../actions';
 
 interface IMapDispatchToProps {
   onClosePress: () => void;
@@ -46,7 +46,7 @@ const IssuesListHeader: React.FC<TIssuesListHeader> = ({
   return (
     <Container paddingTop={top + 20}>
       <Button onPress={onSortPress}>
-        <SortText>Sort</SortText>
+        <SortText>Sort by title</SortText>
       </Button>
       <Button onPress={onClosePress}>
         <CloseText>Close</CloseText>
@@ -57,7 +57,7 @@ const IssuesListHeader: React.FC<TIssuesListHeader> = ({
 
 const mapDispatchToProps = {
   onSortPress: handleSortByTitleClick,
-  onClosePress: resetIssues,
+  onClosePress: resetIssuesState,
 };
 
 export default connect<unknown, IMapDispatchToProps, unknown, IReduxState>(

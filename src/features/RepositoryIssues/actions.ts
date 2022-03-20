@@ -17,7 +17,8 @@ import {
   SET_CURRENT_PAGE,
   SET_LOADING,
   SET_ISSUES,
-  RESET_ISSUES,
+  RESET_ISSUES_STATE,
+  RESET_ISSUES_DATA,
 } from './actionTypes';
 
 export const setRepositoryName = createAction<string>(SET_REPOSITORY_NAME);
@@ -25,7 +26,8 @@ export const setRepositoryOwner = createAction<string>(SET_REPOSITORY_OWNER);
 export const setLoading = createAction<boolean>(SET_LOADING);
 export const setCurrentPage = createAction<number>(SET_CURRENT_PAGE);
 export const setIssues = createAction<TNormalizedIssue[]>(SET_ISSUES);
-export const resetIssues = createAction(RESET_ISSUES);
+export const resetIssuesState = createAction(RESET_ISSUES_STATE);
+export const resetIssuesData = createAction(RESET_ISSUES_DATA);
 
 export const fetchIssues =
   (pagination: TPagination): TThunk =>
@@ -61,7 +63,7 @@ export const fetchIssues =
           throw 'Issues not found';
         }
 
-        dispatch(resetIssues());
+        dispatch(resetIssuesData());
 
         const normalizedData = data.map((issue) => ({
           ...issue,
@@ -77,7 +79,7 @@ export const fetchIssues =
       });
   };
 
-export const handleSortByTitleClick = (): TThunk => (_dispatch, getState) => {
+export const handleSortByTitleClick = (): TThunk => (dispatch, getState) => {
   const state = getState();
   const issuesObject = getIssuesByUidObject(state);
 
@@ -86,6 +88,10 @@ export const handleSortByTitleClick = (): TThunk => (_dispatch, getState) => {
   }
 
   const issues = Object.values(issuesObject);
+  const sortedIssues = issues.sort((object1, object2) =>
+    object1.title.localeCompare(object2.title)
+  );
 
-  console.log({ issues });
+  dispatch(resetIssuesData());
+  dispatch(setIssues(sortedIssues));
 };

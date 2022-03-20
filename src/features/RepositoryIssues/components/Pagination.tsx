@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Text } from 'react-native';
 import styled from '@emotion/native';
 
 import { IReduxState } from 'state/types';
@@ -11,6 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface IMapStateToProps {
   isPreviousButtonDisabled: boolean;
+  currentPage?: number;
 }
 
 interface IMapDispatchToProps {
@@ -42,16 +44,19 @@ const ButtonText = styled.Text({
 
 const Pagination: React.FC<TPagination> = ({
   isPreviousButtonDisabled,
+  currentPage,
   onNextPress,
   onPreviousPress,
 }) => {
   const { bottom } = useSafeAreaInsets();
+  const currentPageExists = currentPage !== undefined;
 
   return (
     <Container paddingBottom={bottom}>
       <Button disabled={isPreviousButtonDisabled} onPress={onPreviousPress}>
         <ButtonText>{'<= Previous'}</ButtonText>
       </Button>
+      {currentPageExists && <Text>{currentPage}</Text>}
       <Button onPress={onNextPress}>
         <ButtonText>{'Next =>'}</ButtonText>
       </Button>
@@ -64,6 +69,7 @@ const mapStateToProps = (state: IReduxState) => {
 
   return {
     isPreviousButtonDisabled: !!currentPage && currentPage === 1,
+    currentPage,
   };
 };
 
