@@ -4,8 +4,10 @@ import { ThemeProvider } from '@emotion/react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import RepositoryIssues from 'features/RepositoryIssues/components';
-import store from 'state/store';
+import createStore from 'state/store';
 import { theme } from 'theme';
+
+const store = createStore();
 
 const App: React.FC = () => (
   <SafeAreaProvider>

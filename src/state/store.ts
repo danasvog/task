@@ -9,4 +9,4 @@ const prodMiddlewareWrapper = applyMiddleware(thunk);
 
 const middleware = __DEV__ ? devMiddlewareWrapper : prodMiddlewareWrapper;
 
-export default createStore(reducers, middleware);
+export default () => createStore(reducers, middleware);

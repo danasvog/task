@@ -40,6 +40,12 @@ export const fetchIssues =
     const repositoryName = getRepositoryName(state);
     const currentPage = getCurrentPage(state);
 
+    if (!repositoryOwner || !repositoryName) {
+      Alert.alert('Please provide repository details.');
+
+      return;
+    }
+
     if (currentPage === undefined) {
       Alert.alert('Something went wrong.');
 
