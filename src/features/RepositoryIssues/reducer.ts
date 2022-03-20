@@ -36,7 +36,7 @@ const isLoadingReducer = handleAction<boolean, boolean>(
 const currentPageReducer = handleAction<number, number>(
   SET_CURRENT_PAGE,
   updateSimpleValue,
-  1
+  0
 );
 
 const issuesUidsReducer = handleAction<string[], TNormalizedIssue[]>(
@@ -53,12 +53,12 @@ const issuesByUidReducer = handleAction<
 const issuesReducers = combineReducers<IIssuesReducers>({
   uids: issuesUidsReducer,
   byUid: issuesByUidReducer,
+  currentPage: currentPageReducer,
 });
 
 export default combineReducers<IRepositoryIssues>({
   repositoryName: repositoryNameReducer,
   repositoryOwner: repositoryOwnerReducer,
   isLoading: isLoadingReducer,
-  currentPage: currentPageReducer,
   issues: resetReducer([RESET_ISSUES], issuesReducers),
 });

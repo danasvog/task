@@ -8,7 +8,7 @@ export const getRepositoryOwner = (state: IReduxState) =>
   state?.[NAME]?.repositoryOwner;
 
 export const getCurrentPage = (state: IReduxState) =>
-  state?.[NAME]?.currentPage;
+  state?.[NAME]?.issues?.currentPage;
 
 export const getIssuesUids = (state: IReduxState) =>
   state?.[NAME]?.issues?.uids || [];

@@ -6,7 +6,8 @@ import { IReduxState } from 'state/types';
 import hideable, { TWithHideableProp } from 'utils/hideable';
 
 import IssueCard from './IssueCard';
-// import IssuesListHeader from './IssuesListHeader';
+import IssuesListHeader from './IssuesListHeader';
+import Pagination from './Pagination';
 import { getIssuesUids } from '../selectors';
 
 interface IMapStateToProps {
@@ -24,8 +25,9 @@ const IssuesList: React.FC<TIssuesList> = ({ uids }) => (
   <FlatList<string>
     keyExtractor={(item: string) => item}
     data={uids}
-    // ListHeaderComponent={IssuesListHeader}
-    contentContainerStyle={{ paddingBottom: 20 }}
+    ListHeaderComponent={IssuesListHeader}
+    ListFooterComponent={Pagination}
+    contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 12 }}
     renderItem={({ item }) => <MemoizedComponent key={item} uid={item} />}
   />
 );

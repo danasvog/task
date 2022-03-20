@@ -34,6 +34,7 @@ const Container = styled.Pressable((props) => ({
   paddingVertical: 8,
   paddingHorizontal: 12,
   marginBottom: 12,
+  alignItems: 'center',
 }));
 
 const CreatorContainer = styled.View({

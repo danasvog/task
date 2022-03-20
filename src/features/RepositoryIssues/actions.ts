@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 import { TThunk } from 'types/common';
 import { API_URL } from 'utils/constants';
 
-import { IIssueResponse, TNormalizedIssue } from './types';
+import { IIssueResponse, TNormalizedIssue, TPagination } from './types';
 import {
   getRepositoryName,
   getRepositoryOwner,
@@ -27,44 +27,55 @@ export const setCurrentPage = createAction<number>(SET_CURRENT_PAGE);
 export const setIssues = createAction<TNormalizedIssue[]>(SET_ISSUES);
 export const resetIssues = createAction(RESET_ISSUES);
 
-export const fetchIssues = (): TThunk => (dispatch, getState) => {
-  const state = getState();
+export const fetchIssues =
+  (pagination: TPagination): TThunk =>
+  (dispatch, getState) => {
+    const state = getState();
 
-  dispatch(setLoading(true));
+    dispatch(setLoading(true));
 
-  const repositoryOwner = getRepositoryOwner(state);
-  const repositoryName = getRepositoryName(state);
-  const page = getCurrentPage(state);
+    const repositoryOwner = getRepositoryOwner(state);
+    const repositoryName = getRepositoryName(state);
+    const currentPage = getCurrentPage(state);
 
-  fetch(
-    `${API_URL}/repos/${repositoryOwner}/${repositoryName}/issues?page=${page}`
-  )
-    .then((response: Response) => {
-      if (response.status === 404) {
-        throw 'Repository not found';
-      }
+    if (currentPage === undefined) {
+      Alert.alert('Something went wrong.');
 
-      return response.json();
-    })
-    .then((data: IIssueResponse[]) => {
-      if (!data.length) {
-        throw 'Issues not found';
-      }
+      return;
+    }
 
-      dispatch(resetIssues());
+    const nextPage = pagination === 'next' ? currentPage + 1 : currentPage - 1;
 
-      const normalizedData = data.map((issue) => ({
-        ...issue,
-        uid: `${issue.id}`,
-      }));
+    fetch(
+      `${API_URL}/repos/${repositoryOwner}/${repositoryName}/issues?page=${nextPage}`
+    )
+      .then((response: Response) => {
+        if (response.status === 404) {
+          throw 'Repository not found';
+        }
 
-      dispatch(setIssues(normalizedData));
-    })
-    .catch((error) => Alert.alert(error))
-    .finally(() => {
-      dispatch(setLoading(false));
-    });
-};
+        return response.json();
+      })
+      .then((data: IIssueResponse[]) => {
+        if (!data.length) {
+          throw 'Issues not found';
+        }
+
+        dispatch(resetIssues());
+
+        const normalizedData = data.map((issue) => ({
+          ...issue,
+          uid: `${issue.id}`,
+        }));
+
+        dispatch(setIssues(normalizedData));
+        dispatch(setCurrentPage(nextPage));
+      })
+      .catch((error) => Alert.alert(error))
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  };
 
 export const handleSortByTitleClick = (): TThunk => (_dispatch, getState) => {
   const state = getState();

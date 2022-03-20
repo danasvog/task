@@ -4,7 +4,6 @@ import { IUidsPayload } from 'utils/createReducers';
 export interface IRepositoryIssues {
   repositoryOwner: string;
   repositoryName: string;
-  currentPage: number;
   isLoading: boolean;
   issues?: IIssuesReducers;
 }
@@ -12,6 +11,7 @@ export interface IRepositoryIssues {
 export interface IIssuesReducers {
   uids: string[];
   byUid: IByUid<TNormalizedIssue>;
+  currentPage: number;
 }
 
 export interface IIssueResponse {
@@ -25,3 +25,5 @@ export interface IIssueResponse {
 }
 
 export type TNormalizedIssue = IIssueResponse & IUidsPayload;
+
+export type TPagination = 'next' | 'previous';

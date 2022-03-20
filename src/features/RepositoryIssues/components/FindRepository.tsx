@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { SafeAreaView } from 'react-native';
 import styled from '@emotion/native';
 
 import Input from 'components/Input';
 import Button from 'components/Button';
 import { IReduxState } from 'state/types';
 import hideable, { TWithHideableProp } from 'utils/hideable';
+import { TDispatch } from 'types/common';
 
 import { setRepositoryName, setRepositoryOwner, fetchIssues } from '../actions';
 import {
@@ -34,7 +34,9 @@ interface IMapDispatchToProps {
 type TFindRepository = IMapStateToProps & IMapDispatchToProps;
 
 const Container = styled.View({
-  paddingVertical: 20,
+  alignSelf: 'stretch',
+  flex: 1,
+  justifyContent: 'center',
   paddingHorizontal: 12,
 });
 
@@ -49,27 +51,25 @@ const FindRepository: React.FC<TFindRepository> = ({
   onOwnerInputChange,
   onButtonPress,
 }) => (
-  <SafeAreaView>
-    <Container>
-      <Input
-        placeholder={repositoryOwnerPlaceholder}
-        value={repositoryOwner}
-        onChangeText={onOwnerInputChange}
-        autoCapitalize="none"
-      />
-      <Input
-        placeholder={repositoryNamePlaceholder}
-        value={repositoryName}
-        onChangeText={onNameInputChange}
-        autoCapitalize="none"
-      />
-      <Button
-        text={buttonText}
-        isLoading={isButtonLoaderVisible}
-        onPress={onButtonPress}
-      />
-    </Container>
-  </SafeAreaView>
+  <Container>
+    <Input
+      placeholder={repositoryOwnerPlaceholder}
+      value={repositoryOwner}
+      onChangeText={onOwnerInputChange}
+      autoCapitalize="none"
+    />
+    <Input
+      placeholder={repositoryNamePlaceholder}
+      value={repositoryName}
+      onChangeText={onNameInputChange}
+      autoCapitalize="none"
+    />
+    <Button
+      text={buttonText}
+      isLoading={isButtonLoaderVisible}
+      onPress={onButtonPress}
+    />
+  </Container>
 );
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -82,11 +82,11 @@ const mapStateToProps = (state: IReduxState) => ({
   isVisible: !getIssuesUids(state)?.length,
 });
 
-const mapDispatchToProps = {
-  onOwnerInputChange: setRepositoryOwner,
-  onNameInputChange: setRepositoryName,
-  onButtonPress: fetchIssues,
-};
+const mapDispatchToProps = (dispatch: TDispatch) => ({
+  onOwnerInputChange: (value: string) => dispatch(setRepositoryOwner(value)),
+  onNameInputChange: (value: string) => dispatch(setRepositoryName(value)),
+  onButtonPress: () => dispatch(fetchIssues('next')),
+});
 
 export default connect<
   TWithHideableProp<IMapStateToProps>,
