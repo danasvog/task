@@ -2,17 +2,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Text } from 'react-native';
 import styled from '@emotion/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { IReduxState } from 'state/types';
+import { TDispatch } from 'types/common';
 
 import { fetchIssues } from '../actions';
-import { getCurrentPage } from '../selectors';
-import { TDispatch } from 'types/common';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { getCurrentPage, isLoading } from '../selectors';
 
 interface IMapStateToProps {
   isPreviousButtonDisabled: boolean;
   currentPage?: number;
+  isDisabled: boolean;
 }
 
 interface IMapDispatchToProps {
@@ -45,6 +46,7 @@ const ButtonText = styled.Text({
 const Pagination: React.FC<TPagination> = ({
   isPreviousButtonDisabled,
   currentPage,
+  isDisabled,
   onNextPress,
   onPreviousPress,
 }) => {
@@ -53,11 +55,14 @@ const Pagination: React.FC<TPagination> = ({
 
   return (
     <Container paddingBottom={bottom}>
-      <Button disabled={isPreviousButtonDisabled} onPress={onPreviousPress}>
+      <Button
+        disabled={isPreviousButtonDisabled || isDisabled}
+        onPress={onPreviousPress}
+      >
         <ButtonText>{'<= Previous'}</ButtonText>
       </Button>
       {currentPageExists && <Text>{currentPage}</Text>}
-      <Button onPress={onNextPress}>
+      <Button disabled={isDisabled} onPress={onNextPress}>
         <ButtonText>{'Next =>'}</ButtonText>
       </Button>
     </Container>
@@ -68,6 +73,7 @@ const mapStateToProps = (state: IReduxState) => {
   const currentPage = getCurrentPage(state);
 
   return {
+    isDisabled: isLoading(state),
     isPreviousButtonDisabled: !!currentPage && currentPage === 1,
     currentPage,
   };
